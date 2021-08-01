@@ -1,0 +1,173 @@
+---
+title: "Assignment Solutions"
+output: html_notebook
+---
+
+#### Solution 1:
+
+```{r}
+d = read.csv("C:/Users/msrra/OneDrive/Desktop/INSAID/Datasets/Data/Data/census_income.csv",stringsAsFactors = F)
+
+library(dplyr)
+
+for(i in 1:ncol(d)){
+  if(class(d[,i])=="character"){
+    if(names(d)[i]!="Y"){
+    message=paste("Number of categories in ",names(d)[i]," : ")
+    num.cat=length(unique(d[,i]))
+    print(paste0(message,num.cat))
+    }
+  }
+}
+```
+
+```{r}
+table(d$race)
+```
+
+```{r}
+d=d%>%
+  mutate(race_AIE=as.numeric(race==" Amer-Indian-Eskimo"),
+         race_API=as.numeric(race==" Asican-Pac-Islander"),
+         race_Black=as.numeric(race==" Black"),
+         race_White=as.numeric(race==" White")) %>%
+  select(-race)
+```
+
+```{r}
+table(d$sex)
+```
+
+```{r}
+d=d %>%
+  mutate(sex_M=as.numeric(sex==" Male")) %>%
+  select(-sex)
+```
+
+```{r}
+table(d$relationship)
+```
+
+```{r}
+d=d %>%
+  mutate(rel_h=as.numeric(relationship==" Husband"),
+         rel_nif=as.numeric(relationship==" Not-in-family"),
+         rel_oc=as.numeric(relationship==" Own-child"),
+         rel_um=as.numeric(relationship==" Unmarried"),
+         rel_w=as.numeric(relationship==" Wife")) %>%
+  select(-relationship)
+```
+
+___
+
+#### Solution 2: 
+
+```{r}
+round(prop.table(table(d$workclass,d$Y),1),1)
+```
+
+```{r}
+d=d %>%
+  mutate(wc_1=as.numeric(workclass==" Self-emp-inc"),
+         wc_2=as.numeric(workclass==" Federal-gov"),
+         wc_3=as.numeric(workclass %in% c(" Local-gov"," Self-emp-not-inc"," State-gov")),
+         wc_4=as.numeric(workclass==" Private"),
+         wc_5=as.numeric(workclass==" ?")) %>%
+  select(-workclass)
+```
+
+```{r}
+round(prop.table(table(d$education,d$Y),1),1)
+```
+
+```{r}
+d=d %>%
+  mutate(edu_1=as.numeric(education %in% c(" 10th"," 11th"," 12th"," 7th-8th"," 9th")),
+         edu_2=as.numeric(education %in% c(" 1st-4th"," 5th-6th"," Preschool")),
+         edu_3=as.numeric(education %in% c(" Assoc-acdm"," HS-grad"," Some-college")),
+         edu_4=as.numeric(education ==" Assoc-voc"),
+         edu_5=as.numeric(education==" Bachelors"),
+         edu_6=as.numeric(education==" Masters")) %>%
+  select(-education)
+```
+
+```{r}
+round(prop.table(table(d$marital.status,d$Y),1),1)
+```
+
+```{r}
+d=d %>%
+  mutate(ms_1=as.numeric(marital.status==" Never-married"),
+         ms_2=as.numeric(marital.status %in% c(" Married-AF-spouse"," Married-civ-spouse"))) %>%
+  select(-marital.status)
+```
+
+```{r}
+round(prop.table(table(d$occupation,d$Y),1),1)
+```
+
+```{r}
+d=d %>%
+  mutate(oc_1=as.numeric(occupation==" Exec-managerial"),
+         oc_2=as.numeric(occupation==" Prof-specialty"),
+         oc_3=as.numeric(occupation %in% c(" Protective-serv"," Sales"," Tech-support")),
+         oc_4=as.numeric(occupation %in% c(" Craft-repair"," Transport-moving")),
+         oc_5=as.numeric(occupation %in% c(" Priv-house-serv"," Other-service"))) %>%
+  select(-occupation)
+```
+
+```{r}
+k = round(prop.table(table(d$native.country,d$Y),1),1)
+sort(k[,1])
+```
+
+```{r}
+d=d %>%
+  mutate(nc_1=as.numeric(native.country %in% c(" Cambodia"," France"," India",
+                                               " Iran"," Japan"," Taiwan"," Yugoslavia")),
+         nc_2=as.numeric(native.country %in% c(" ?"," Canada"," China"," Cuba"," England",
+                                               " Germany"," Greece"," Hong"," Italy",
+                                               " Philippines")),
+         nc_3=as.numeric(native.country %in% c(" Hungary"," Ireland"," Poland"," Scotland",
+                                               " South"," Thailand"," United-States")),
+         nc_4=as.numeric(native.country %in% c(" Columbia"," Dominican-Republic",
+                                               " Guatemala"," Holand-Netherlands",
+                                               " Outlying-US(Guam-USVI-etc)"))) %>%
+  select(-native.country)
+```
+
+#### Solution 3:
+
+```{r}
+sum(d$capital.gain==0)/nrow(d)
+```
+
+```{r}
+d=d %>%
+  mutate(cg_flag0=as.numeric(capital.gain==0))
+```
+
+```{r}
+sum(d$capital.loss==0)/nrow(d)
+```
+
+```{r}
+d=d %>%
+  mutate(cl_flag0=as.numeric(capital.loss==0))
+```
+
+___
+
+#### Solution 4:
+
+```{r}
+d$Y=as.numeric(d$Y==" >50K")
+```
+
+
+
+
+
+
+
+
